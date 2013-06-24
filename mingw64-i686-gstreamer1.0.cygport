@@ -1,0 +1,24 @@
+ORIG_PN="gstreamer"
+CROSS_HOST="i686-w64-mingw32"
+inherit cross gstreamer
+
+NAME="mingw64-i686-gstreamer1.0"
+VERSION=1.0.7
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="GStreamer 1.0 core for Win32 toolchain"
+DESCRIPTION="The core library for the GStreamer multimedia framework. It
+contains the headers, core library files, and core elements."
+
+src_compile() {
+	cd ${S}
+	gstreamer_autoreconf
+	cd ${B}
+	# avoid false positive from mingw-evil libdl
+	cygconf --disable-examples --disable-introspection --disable-tests ac_cv_lib_dl_dladdr=no
+	cygmake
+}
+
+MAKEOPTS+=" man_MANS= "
+
+KEEP_LA_FILES="none"
